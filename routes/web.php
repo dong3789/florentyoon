@@ -22,4 +22,4 @@ Route::group(['prefix'=> 'main'], function(){
     Route::get('/', [TestController::class, 'test']);
 });
 
-Route::get('/api/test', [TestController::class, 'test']);
+Route::get('/test', [TestController::class, 'test']);
