@@ -18,8 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/test', [TestController::class, 'test']);
+
 Route::group(['prefix'=> 'main'], function(){
     Route::get('/', [TestController::class, 'test']);
 });
 
-Route::get('/test', [TestController::class, 'test']);
