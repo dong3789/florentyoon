@@ -24,3 +24,11 @@ Route::group(['prefix'=> 'main'], function(){
     Route::get('/', [TestController::class, 'test']);
 });
 
+
+Route::group(['prefix' => 'api'], function(){
+    Route::get('/users', [\App\Http\Controllers\CatUsersController::class, 'getUsersData']);
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
