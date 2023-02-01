@@ -13,22 +13,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::routes();
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', [TestController::class, 'test']);
-
-Route::group(['prefix'=> 'main'], function(){
-    Route::get('/', [TestController::class, 'test']);
-});
-
-
-Route::group(['prefix' => 'api'], function(){
+Route::group(['prefix' => 'api', 'middleware' => 'auth'], function(){
     Route::get('/users', [\App\Http\Controllers\CatUsersController::class, 'getUsersData']);
 });
 
-Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

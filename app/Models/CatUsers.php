@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use mysql_xdevapi\Table;
 
-class User extends Authenticatable
+class CatUsers extends Authenticatable
 {
+    protected $table = 'cat_users';
+
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -29,6 +32,12 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'email_verified_at',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'two_factor_confirmed_at',
+        'current_team_id',
+        'profile_photo_path',
         'password',
         'remember_token',
     ];
@@ -41,4 +50,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getCatUserData($userId) {
+        $data = self::leftJoin('cat_users_breed', 'cat_users_breed.id', '=', 'cat_users.id')->where('cat_users.id', '=', $userId)->first();
+        return $data;
+    }
 }
