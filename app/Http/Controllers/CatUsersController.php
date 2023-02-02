@@ -6,17 +6,36 @@ use App\Models\CatUsers;
 use F9Web\ApiResponseHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use function App\responseData;
+use function App\userConvData;
 
 class CatUsersController extends Controller
 {
     use ApiResponseHelpers;
 
-    public function getUsersData(Request $request) {
-        //# 비회원 조회 불가
+    /**
+     * 1. 유저(고양이) 정보 받아오기 - 비회원 조회 불가
+     *
+     * 품종
+     * 나이
+     * 털색깔/무늬
+     * 유저형태
+    */
+    public function getUsersData(Request $request)
+    {
         $userId = Auth::getUser()->id;
+        if(empty($userId)) return responseData(400, '존재하지 않는 ID 입니다.');
 
-        $findData = (new CatUsers())->getCatUserData($userId);
-        dd($findData);
-        return $this->respondWithSuccess($findData);
+        $reqData = (new CatUsers())->getCatUserData($userId)->addSelect('cat_users.age')->first();
+        if(empty($reqData)) return responseData(400, '존재하지 않는 사용자 입니다.');
+
+        //# todo:: 나이에 대한 암호화가 필요합니다.
+
+        $convData = userConvData($reqData);
+
+        return $this->respondWithSuccess($convData);
+
     }
+
+
 }

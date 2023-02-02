@@ -19,9 +19,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => 'api', 'middleware' => 'auth'], function(){
-    Route::get('/users', [\App\Http\Controllers\CatUsersController::class, 'getUsersData']);
+Route::group(['prefix' => 'api'], function(){
+    Route::group(['middleware' => 'auth'], function(){
+        Route::get('/users', [\App\Http\Controllers\CatUsersController::class, 'getUsersData']);
+    });
+
+    Route::get('/board', [\App\Http\Controllers\CatBoardController::class, 'getBoardList']);
+    Route::get('/board/{id}', [\App\Http\Controllers\CatBoardController::class, 'getBoardDetail']);
 });
+
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
