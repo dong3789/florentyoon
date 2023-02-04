@@ -22,7 +22,7 @@ class CatBoard extends Model
      */
     public function cat_board_reply()
     {
-        return $this->hasMany(CatBoardReply::class, 'board_id', 'board_id');
+        return $this->hasMany(CatBoardReply::class, 'board_id', 'id');
     }
 
     /**
@@ -32,7 +32,7 @@ class CatBoard extends Model
     private function getBoardQuery()
     {
         $query = self::select(
-                'cat_board.id as board_id',                 //# 질문 id
+                'cat_board.id as id',                       //# 질문 id
                 'cat_board.category_type_id',               //# 질문 타입
                 'cat_board.writer as board_writer',         //# 질문 작성자
                 'cat_board.title as board_title',           //# 질문 제목
@@ -52,7 +52,10 @@ class CatBoard extends Model
 
     public function getBoardListData($request)
     {
-        $data = $this->getBoardQuery()->paginate($request['page']);
+        $data = $this->getBoardQuery()
+            ->withCount(['cat_board_reply']) //# 답변 수
+            ->orderBy('cat_board.id', 'desc')
+            ->paginate($request['page']);
 
         return $data;
     }
@@ -61,11 +64,10 @@ class CatBoard extends Model
     public function getBoardDetailData($boardId)
     {
         $data = $this->getBoardQuery()
-            ->where('cat_board.id', '=', $boardId)
-            ->with(['cat_board_reply' => function($q){
+            ->with(['cat_board_reply' => function($q) {
                 $q->select(
+                    'cat_board_reply.board_id as board_id', //# 질문 id
                     'cat_board_reply.id as reply_id',       //# 답변 id
-                    'cat_board_reply.board_id',             //# 질문 id
                     'cat_board_reply.reply_content',        //# 답변내용
                     'cat_board_reply.reply_writer',         //# 답변 유저 id
                     'cat_board_reply.choose',               //# 답변 채택 유무
@@ -78,6 +80,7 @@ class CatBoard extends Model
                 ->join('cat_users', 'cat_users.id', '=', 'cat_board_reply.reply_writer')
                 ->get();
             }])
+            ->where('cat_board.id', '=', $boardId)
             ->first();
 
         return $data;

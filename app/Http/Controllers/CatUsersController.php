@@ -29,7 +29,6 @@ class CatUsersController extends Controller
         $reqData = (new CatUsers())->getCatUserData($userId)->addSelect('cat_users.age')->first();
         if(empty($reqData)) return responseData(400, '존재하지 않는 사용자 입니다.');
 
-        //# todo:: 나이에 대한 암호화가 필요합니다.
 
         $convData = userConvData($reqData);
 

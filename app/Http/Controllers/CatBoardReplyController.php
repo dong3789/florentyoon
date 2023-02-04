@@ -65,6 +65,7 @@ class CatBoardReplyController extends Controller
      */
     public function updateBoardReplyData($replyId, BoardReplyRequest $request)
     {
+        $userId = Auth::getUser()->id;
         $valData = $request->validated();
 
         $arrData = [
@@ -75,6 +76,7 @@ class CatBoardReplyController extends Controller
             $resReplyData = (new CatBoardReply())->getBoardReplyDetailData($replyId);
             if(empty($resReplyData)) return responseData(400, null, "이미 삭제된 답변 입니다.");
             if($resReplyData->choose) return responseData(400, null, "채택된 답변은 수정 불가능 합니다.");
+            if($resReplyData->reply_writer != $userId) return responseData(400, null, "수 할 수 없습니다.");
 
             $resData = (new CatBoard())->getBoardDetailData($resReplyData->board_id);
             if(empty($resData)) return responseData(400, null, "이미 삭제된 질문입니다.");
@@ -104,10 +106,13 @@ class CatBoardReplyController extends Controller
      */
     public function removeBoardReplyData($replyId)
     {
+        $userId = Auth::getUser()->id;
+
         try {
             $resReplyData = (new CatBoardReply())->getBoardReplyDetailData($replyId);
             if(empty($resReplyData)) return responseData(400, null, "이미 삭제된 답변 입니다.");
             if($resReplyData->choose) return responseData(400, null, "채택된 답변은 삭제 불가능 합니다.");
+            if($resReplyData->reply_writer != $userId) return responseData(400, null, "삭제 할 수 없습니다.");
 
             $resData = (new CatBoard())->getBoardDetailData($resReplyData->board_id);
             if(empty($resData)) return responseData(400, null, "이미 삭제된 질문입니다.");

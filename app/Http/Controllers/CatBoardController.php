@@ -20,19 +20,19 @@ class CatBoardController extends Controller
      * 작성 날짜
      * 유저 정보(민감 정보 제외)
      *
-     * todo:: 검색 정보(request)
      */
     public function getBoardList(Request $request)
     {
         $arrData = [
             'page' => $request->input('page', 9)
         ];
-        //# todo:: 검색 관련 request 검증 고도화작업 (interface화 시키기)
+
         $reqData = (new CatBoard())->getBoardListData($arrData);
 
         $convData = $reqData->map(function($e){
-            $e = userConvData($e);
+            $e = userConvData($e, true);
             $e = boardConvData($e);
+
             return $e;
         });
 
@@ -112,11 +112,14 @@ class CatBoardController extends Controller
      */
     public function removeBoardData($boardId)
     {
+        $userId = Auth::getUser()->id;
+
         try {
             $resData = (new CatBoard())->getBoardDetailData($boardId);
 
             if(empty($resData)) return responseData(400, null, "이미 삭제된 질문입니다.");
             if(count($resData->cat_board_reply) > 0) return responseData(400, null, "답변이 달린 질문은 삭제할 수 없습니다.");
+            if($resData->board_writer != $userId) return responseData(400, null, "삭제할 수 없습니다.");
 
             //# 삭제 진행
             $res = (new CatBoard())->deleteBoard($boardId);
@@ -143,6 +146,8 @@ class CatBoardController extends Controller
      */
     public function updateBoardData($boardId, BoardValidRequest $request)
     {
+        $userId = Auth::getUser()->id;
+
         $valData = $request->validated();
 
         $arrData = [
@@ -153,9 +158,9 @@ class CatBoardController extends Controller
 
         try {
             $resData = (new CatBoard())->getBoardDetailData($boardId);
-
             if(empty($resData)) return responseData(400, null, "이미 삭제된 질문입니다.");
             if(count($resData->cat_board_reply) > 0) return responseData(400, null, "답변이 달린 질문은 수정할 수 없습니다.");
+            if($resData->board_writer != $userId) return responseData(400, null, "수정할 수 없습니다.");
 
             //# 수정 진행
             $res = (new CatBoard())->updateBoard($boardId, $arrData);

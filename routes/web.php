@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes();
 
 Route::get('/', function () {
@@ -23,12 +23,13 @@ Route::fallback(function(){
     return response()->json([
         'message' => 'Page Not Found.'], 404);
 });
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 
 Route::group(['prefix' => 'api'], function(){
-    Route::group(['middleware' => 'auth'], function(){
+    Route::group(['middleware' => 'login'], function(){
 
         Route::get('/users', [\App\Http\Controllers\CatUsersController::class, 'getUsersData']); //# 사용자 정보
 

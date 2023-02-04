@@ -27,13 +27,20 @@ if(!function_exists('responseData')){
 
 
 if(!function_exists('userConvData')){
-    function userConvData($data)
+    /**
+     * $data : 변환할 데이터
+     * $type : true=>답변 로딩 금지, false=>답변 로딩 허용
+     * @param $data
+     * @param false $type
+     * @return mixed
+     */
+    function userConvData($data, $type=false)
     {
-        if(isset($data->ment_type)) $data->ment_str = getMentTypeDataConv($data->ment_type);
-        if(isset($data->breed_id)) $data->breed_str = getBreedDataConv($data->breed_id);
-        if(isset($data->skin_id)) $data->skin_str = getSkinTypeDataConv($data->skin_id);
+        if(!empty($data->ment_type)) $data->ment_str     = getMentTypeDataConv($data->ment_type);
+        if(!empty($data->breed_id))  $data->breed_str    = getBreedDataConv($data->breed_id);
+        if(!empty($data->skin_id))   $data->skin_str     = getSkinTypeDataConv($data->skin_id);
 
-        if(isset($data->cat_board_reply)){
+        if(!$type && !empty($data->cat_board_reply)){
             $data->cat_board_reply->map(function($q){
                 $q = userConvData($q);
                 return $q;
@@ -48,7 +55,7 @@ if(!function_exists('userConvData')){
 if(!function_exists('boardConvData')){
     function boardConvData($data)
     {
-        if(isset($data->category_type_id)) $data->category_type_str = getBoardTypeDataConv($data->category_type_id);
+        if(!empty($data->category_type_id)) $data->category_type_str = getBoardTypeDataConv($data->category_type_id);
 
         return $data;
     }
