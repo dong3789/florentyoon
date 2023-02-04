@@ -19,9 +19,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::fallback(function(){
+    return response()->json([
+        'message' => 'Page Not Found.'], 404);
+});
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
 Route::group(['prefix' => 'api'], function(){
     Route::group(['middleware' => 'auth'], function(){
-        Route::get('/users', [\App\Http\Controllers\CatUsersController::class, 'getUsersData']);
+
+        Route::get('/users', [\App\Http\Controllers\CatUsersController::class, 'getUsersData']); //# 사용자 정보
+
+        //# 질문
+        Route::group(['prefix' => 'board'], function() {
+            Route::post('/',        [\App\Http\Controllers\CatBoardController::class, 'setBoardCreate']); //# 질문 등록하기
+            Route::delete('/{id}',  [\App\Http\Controllers\CatBoardController::class, 'removeBoardData']); //# 질문 삭제하기
+            Route::put('/{id}',     [\App\Http\Controllers\CatBoardController::class, 'updateBoardData']); //# 질문 수정하기
+
+            Route::post('/{boardId}/reply', [\App\Http\Controllers\CatBoardReplyController::class, 'createBoardReplyData']); //# 답글 작성하기
+        });
+
+        //# 답글
+        Route::group(['prefix' => 'reply'], function() {
+            Route::put('/{id}',        [\App\Http\Controllers\CatBoardReplyController::class, 'updateBoardReplyData']); //# 답글 수정하기
+            Route::delete('/{id}',  [\App\Http\Controllers\CatBoardReplyController::class, 'removeBoardReplyData']); //# 답변 삭제하기
+        });
     });
 
     Route::get('/board', [\App\Http\Controllers\CatBoardController::class, 'getBoardList']);
@@ -30,4 +54,3 @@ Route::group(['prefix' => 'api'], function(){
 
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

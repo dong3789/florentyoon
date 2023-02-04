@@ -7,5 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class CatUsersSkin extends Model
 {
-    use HasFactory;
+    protected $table = 'cat_users_skin';
+
 }

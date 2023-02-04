@@ -14,7 +14,7 @@ use function App\getSkinTypeDataConv;
 
 class CatUsers extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+    use HasApiTokens, Notifiable, SoftDeletes;
 
     protected $table = 'cat_users';
 

@@ -3,14 +3,25 @@
 namespace App;
 
 
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Log;
+
 if(!function_exists('responseData')){
-    function responseData($code=null, $msg=null)
-    {
-        $response = [
-            'code' => $code,
-            'message' => $msg
-        ];
-        return json_encode($response, JSON_UNESCAPED_UNICODE);
+    function responseData($code = 200, $data = '', $message = ''){
+
+        $arrResult = [];
+        $arrResult['code'] = $code;
+
+        if($data != '') {
+            $arrResult['data'] = $data;
+        }
+
+        if($message != '') {
+            $arrResult['message'] = $message;
+        }
+
+        return response()->json($arrResult, 200);
     }
 }
 
