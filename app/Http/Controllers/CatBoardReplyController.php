@@ -130,4 +130,43 @@ class CatBoardReplyController extends Controller
             return responseData(400, $e->getMessage(), "삭제 오류가 발생했습니다.");
         }
     }
+
+
+    /**
+     * 10. 답변 채택
+     * @param $boardId
+     * @return \Illuminate\Http\JsonResponse
+     *
+     */
+    public function setChooseReplyData($replyId)
+    {
+        $userId = Auth::getUser()->id;
+
+        $arrData = [
+            'choose'=> true
+        ];
+
+        try {
+            $resReplyData = (new CatBoardReply())->getBoardReplyDetailData($replyId);
+            if(empty($resReplyData)) return responseData(400, null, "이미 삭제된 답변 입니다.");
+            if($resReplyData->choose) return responseData(400, null, "이미 선택 된 답변 입니다.");
+
+            $resData = (new CatBoard())->getBoardDetailData($resReplyData->board_id);
+            if(empty($resData)) return responseData(400, null, "이미 삭제된 질문입니다.");
+            if($resData->board_writer != $userId) return responseData(400, null, "채택 할 수 없습니다.");
+            if($resData->cat_board_reply->sum('choose') > 0) return responseData(400, null, "이미 채택 된 답변이 있습니다.");
+
+            //# 채택 진행
+            $res = (new CatBoardReply())->chooseBoardReply($replyId, $arrData);
+
+            if($res){
+                return responseData(200, null, "수정 성공했습니다.");
+            }else{
+                return responseData(400, null, "수정 실패했습니다.");
+            }
+
+        }catch (\Exception $e){
+            return responseData(400, $e->getMessage(), "수정 오류가 발생했습니다.");
+        }
+    }
 }

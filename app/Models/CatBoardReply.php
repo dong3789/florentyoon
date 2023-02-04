@@ -48,5 +48,13 @@ class CatBoardReply extends Model
         return $res;
     }
 
+    public function chooseBoardReply($replyId, $arrData)
+    {
+        $model = self::find($replyId);
+        $resData = $this->convModelData($arrData);
+        $model->fill($resData->toArray());
+        $res = $model->save();
 
+        return $res;
+    }
 }

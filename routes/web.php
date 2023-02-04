@@ -39,12 +39,13 @@ Route::group(['prefix' => 'api'], function(){
             Route::delete('/{id}',  [\App\Http\Controllers\CatBoardController::class, 'removeBoardData']); //# 질문 삭제하기
             Route::put('/{id}',     [\App\Http\Controllers\CatBoardController::class, 'updateBoardData']); //# 질문 수정하기
 
-            Route::post('/{boardId}/reply', [\App\Http\Controllers\CatBoardReplyController::class, 'createBoardReplyData']); //# 답글 작성하기
+            Route::post('/{boardId}/reply', [\App\Http\Controllers\CatBoardReplyController::class, 'createBoardReplyData']); //# 답변 작성하기
         });
 
         //# 답글
         Route::group(['prefix' => 'reply'], function() {
-            Route::put('/{id}',        [\App\Http\Controllers\CatBoardReplyController::class, 'updateBoardReplyData']); //# 답글 수정하기
+            Route::post('/{id}',    [\App\Http\Controllers\CatBoardReplyController::class, 'setChooseReplyData']); //# 답변 채택
+            Route::put('/{id}',     [\App\Http\Controllers\CatBoardReplyController::class, 'updateBoardReplyData']); //# 답변 수정하기
             Route::delete('/{id}',  [\App\Http\Controllers\CatBoardReplyController::class, 'removeBoardReplyData']); //# 답변 삭제하기
         });
     });
