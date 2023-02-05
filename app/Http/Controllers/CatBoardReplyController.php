@@ -160,13 +160,13 @@ class CatBoardReplyController extends Controller
             $res = (new CatBoardReply())->chooseBoardReply($replyId, $arrData);
 
             if($res){
-                return responseData(200, null, "수정 성공했습니다.");
+                return responseData(200, null, "채택 성공했습니다.");
             }else{
-                return responseData(400, null, "수정 실패했습니다.");
+                return responseData(400, null, "채택 실패했습니다.");
             }
 
         }catch (\Exception $e){
-            return responseData(400, $e->getMessage(), "수정 오류가 발생했습니다.");
+            return responseData(400, $e->getMessage(), "채택 오류가 발생했습니다.");
         }
     }
 }
