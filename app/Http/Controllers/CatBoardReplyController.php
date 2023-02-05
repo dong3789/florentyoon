@@ -25,7 +25,7 @@ class CatBoardReplyController extends Controller
     {
         $valData = $request->validated();
 
-        $userId = Auth::getUser()->id;
+        $userId = Auth::user()->id;
         if(empty($userId)) return responseData(400, '존재하지 않는 ID 입니다.');
 
         $arrData = [
@@ -65,7 +65,7 @@ class CatBoardReplyController extends Controller
      */
     public function updateBoardReplyData($replyId, BoardReplyRequest $request)
     {
-        $userId = Auth::getUser()->id;
+        $userId = Auth::user()->id;
         $valData = $request->validated();
 
         $arrData = [
@@ -106,7 +106,7 @@ class CatBoardReplyController extends Controller
      */
     public function removeBoardReplyData($replyId)
     {
-        $userId = Auth::getUser()->id;
+        $userId = Auth::user()->id;
 
         try {
             $resReplyData = (new CatBoardReply())->getBoardReplyDetailData($replyId);
@@ -140,7 +140,7 @@ class CatBoardReplyController extends Controller
      */
     public function setChooseReplyData($replyId)
     {
-        $userId = Auth::getUser()->id;
+        $userId = Auth::user()->id;
 
         $arrData = [
             'choose'=> true

@@ -78,7 +78,7 @@ class CatBoardController extends Controller
     {
         $valData = $request->validated();
 
-        $userId = Auth::getUser()->id;
+        $userId = Auth::user()->id;
         if(empty($userId)) return responseData(400, '존재하지 않는 ID 입니다.');
 
         $arrData = [
@@ -112,7 +112,7 @@ class CatBoardController extends Controller
      */
     public function removeBoardData($boardId)
     {
-        $userId = Auth::getUser()->id;
+        $userId = Auth::user()->id;
 
         try {
             $resData = (new CatBoard())->getBoardDetailData($boardId);
@@ -146,7 +146,7 @@ class CatBoardController extends Controller
      */
     public function updateBoardData($boardId, BoardValidRequest $request)
     {
-        $userId = Auth::getUser()->id;
+        $userId = Auth::user()->id;
 
         $valData = $request->validated();
 

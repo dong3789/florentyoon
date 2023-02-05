@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use App;
 use function App\getBreedDataConv;
@@ -53,5 +55,15 @@ class CatUsers extends Authenticatable
     }
 
 
-
+    public function removeToken($userId)
+    {
+        //# 지난 토큰 삭제
+        $model = DB::table('oauth_access_tokens')->where('user_id','=', $userId);
+        $mData = $model->first();
+        if(!empty($mData)){
+            $resId = $mData->id;
+            $model->delete();
+            DB::table('oauth_refresh_tokens')->where('access_token_id','=', $resId)->delete();
+        }
+    }
 }

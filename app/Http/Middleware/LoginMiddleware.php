@@ -18,7 +18,7 @@ class LoginMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard('login')->check()) {
+        if (Auth::guard('api')->check()) {
             return $next($request);
         }
 

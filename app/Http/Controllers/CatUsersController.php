@@ -23,7 +23,7 @@ class CatUsersController extends Controller
     */
     public function getUsersData(Request $request)
     {
-        $userId = Auth::getUser()->id;
+        $userId = Auth::user()->id;
         if(empty($userId)) return responseData(400, '존재하지 않는 ID 입니다.');
 
         $reqData = (new CatUsers())->getCatUserData($userId)->addSelect('cat_users.age')->first();
