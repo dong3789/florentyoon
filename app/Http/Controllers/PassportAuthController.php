@@ -59,8 +59,8 @@ class PassportAuthController extends Controller
         $user = Auth::guard('auth')->user();
         $data = [
             'grant_type' => 'password',
-            'client_id' => '6',
-            'client_secret' => 'Gz3j9ebxnNY2YX11GBj8BJqvhtkwjVeGVcBCsAGN',
+            'client_id' => '8',
+            'client_secret' => 'ZkK2aPddhFTHgs5aKDOC1DwyOO0bPTblNy2axrDC',
             'username' => $user['email'],
             'password' => $password,
             'scope' => '*',
